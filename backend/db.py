@@ -12,6 +12,7 @@ class DB:
         self._psw = self._data[2].split(":")[1]
         self._db= self._data[3].split(":")[1]
         self._port = self._data[4].split(":")[1]
+        #Richiamo metodo per la connessione al DB
         self.connectDB()
     
     #Metodo per la connessione al DB
