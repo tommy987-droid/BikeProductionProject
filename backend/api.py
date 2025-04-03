@@ -1,20 +1,23 @@
+#Importazione libreria fastapi e dipendenda per la creazione del server backend
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+
+#Importazione dei miei script 
 import mainBike
 import db
 from analysis import analysis
 
-
-
+#Creazione variabile globale in cui salvare i lotti di produzione
 costructBatch =""
 
 # Creazione applicazione FastAPI
 app = FastAPI()
 origins = ["*"]
 
+#Impostazione del CORS per accettare richieste da qualsiasi fonte
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -23,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+#Creazione delle Classi per la tipizzazione dei dati ricevuti tramite richieste POST 
 class EditBikes(BaseModel):
    id: int
    desc: str
@@ -40,40 +43,56 @@ class CreateChart(BaseModel):
    idBatch: str
    idBike: int =0
 
-
+#Impostazione della Route per recuperare le esportazioni dei grafici
 app.mount("/graph", StaticFiles(directory="graph"), name="graph")
 
-
+#Route Get utilizzata per la produzione delle bici
 @app.get("/")
 async def productionBike(nStations: int=1, hoursDay: int=8 , bike1:int=0,bike2:int=0,bike3:int=0,bike4:int=0):
     
+    #Creazione dell'oggetto che contiene l'elenco delle bici da produrre 
     batchBike = {1:bike1,2:bike2,3:bike3,4:bike4}
     
+    #Tramite il costrutto try exept verifico la corretta connessione al db e la produzione delle bici
     try:
+
+        #Connessione al DB e query per recupero informazioni bici
         database =db.DB()
-        
         query = "SELECT * FROM Bike_Type"
         dataBike = database.select(query)
         query = "SELECT * FROM Time_Task ORDER BY ID_Bike, ID_Task"
         dataTime = database.select(query)
         
+        #Produzione effettiva del lotto di bici
         global costructBatch
         costructBatch = mainBike.ConstructionBike(nStations, hoursDay,batchBike,dataBike,dataTime,database)
+        
+        #Creazione dell'oggetto da restituire che conterrà le bici prodotte e il tempo di produzione
         objReturn = {"bikeMake":{},"timeWork":0}
+        
+        #Inserimento nell'oggetto delle bici prodotte
         num = 0
         for row in costructBatch.getListEndWork():
             objReturn["bikeMake"][num] = row
             num +=1
-        database.disconnect()
-        objReturn["timeWork"] = costructBatch.getTimeWork()
-        return objReturn
-    except:
         
-        raise HTTPException(status_code=503, detail="Error Connection DB")
+        #Disconnessione DB
+        database.disconnect()
 
+        #Inserimento nell'oggetto del tempo effettivo di produzione
+        objReturn["timeWork"] = costructBatch.getTimeWork()
+
+        #Restituzione dell'oggetto alla richiesta GET
+        return objReturn
+    
+    #Se ho qualsiasi problema con la connessione al DB o la produzione restituisco errore
+    except:
+        raise HTTPException(status_code=503, detail="Error Connection DB or Make Bike")
+
+#Route Get utilizzata per visualizzazione caratteristiche generiche bici
 @app.get("/bike")
 async def showBike():
-    
+
     try:
         database =db.DB()
         query = "SELECT * FROM Bike_Type"
@@ -84,12 +103,14 @@ async def showBike():
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
+#Route Get utilizzata per filtrare le informazioni di visualizzazione dei singoli task
 @app.get("/task/view")
 async def showTaskFilter(idBike:int=0,idTask:int=0):
     
     try:
         database =db.DB()
-        
+
+        #Filtraggio sulla base dell'id della bici
         if idBike == 0:
             query = f"""SELECT Time_Task.ID_Bike,Bike_Type.Descri,Task_Cost.ID_Task, Task_Cost.Description, Time_Task.Min, Time_Task.Max 
             FROM Time_Task
@@ -99,7 +120,8 @@ async def showTaskFilter(idBike:int=0,idTask:int=0):
             ON Time_Task.ID_Task = Task_Cost.ID_Task
             WHERE Time_Task.ID_Task = {idTask}
             ORDER by Bike_Type.ID_Type, Task_Cost.ID_Task"""
-            
+        
+        #Filtraggio sulla base dell'id del task
         else:
             query = f"""SELECT Time_Task.ID_Bike,Bike_Type.Descri,Task_Cost.ID_Task, Task_Cost.Description, Time_Task.Min, Time_Task.Max 
             FROM Time_Task
@@ -117,9 +139,8 @@ async def showTaskFilter(idBike:int=0,idTask:int=0):
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
-
+#Route Get utilizzata per visualizzazione dei singoli task
 @app.get("/task")
-
 async def showTask():
     try:
         database =db.DB()
