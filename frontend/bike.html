@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Type Bike</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <menu>
+        <ul>
+            <li><a href="/">Production Bike</a></li>
+            <li><a href="/production.html">View Batch Bike</a></li>
+            <li><a href="/analysis.html">View Analysis</a></li>
+            <li><a href="/bike.html">View Bike</a></li>
+            <li><a href="/task.html">View Task</a></li>
+        </ul>
+    </menu>
+    <h2>Model Bike</h2>
+    <div class="result"></div>
+    <button id="edit" onclick="toggleForm()">Edit</button>
+    <div class="form formHide form2">
+        <div class="row">
+            <div class="input">
+                <label for="idBike">ID</label>
+                <input id="idBike" type="number">
+            </div>
+            <div class="input">
+                <label for="desc">Description</label>
+                <input id="desc" type="text">
+            </div>
+            <div class="input">
+                <label for="dfCoe">Defect Coef</label>
+                <input id="dfCoe" type="number">
+            </div>
+        </div>
+
+        <div class="row">
+            <button onclick="editBike()">Edit Bike</button>
+        </div>
+    </div>
+
+    <script src="script_bike.js"></script>
+</body>
+
+</html>

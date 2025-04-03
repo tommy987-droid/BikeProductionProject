@@ -1,0 +1,5 @@
+host:localhost
+user:root
+psw:root
+db:bike
+port:8889
