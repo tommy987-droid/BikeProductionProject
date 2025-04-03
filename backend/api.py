@@ -110,7 +110,7 @@ async def showTaskFilter(idBike:int=0,idTask:int=0):
     try:
         database =db.DB()
 
-        #Filtraggio sulla base dell'id della bici
+        #Filtro sulla base dell'id della bici
         if idBike == 0:
             query = f"""SELECT Time_Task.ID_Bike,Bike_Type.Descri,Task_Cost.ID_Task, Task_Cost.Description, Time_Task.Min, Time_Task.Max 
             FROM Time_Task
@@ -121,7 +121,7 @@ async def showTaskFilter(idBike:int=0,idTask:int=0):
             WHERE Time_Task.ID_Task = {idTask}
             ORDER by Bike_Type.ID_Type, Task_Cost.ID_Task"""
         
-        #Filtraggio sulla base dell'id del task
+        #Filtro sulla base dell'id del task
         else:
             query = f"""SELECT Time_Task.ID_Bike,Bike_Type.Descri,Task_Cost.ID_Task, Task_Cost.Description, Time_Task.Min, Time_Task.Max 
             FROM Time_Task
@@ -158,31 +158,35 @@ async def showTask():
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
-
+#Route Get utilizzata per filtrare la visualizzazione dello storico di tutte le bici prodotte
 @app.get("/prod/view")
-
 async def showProdFilter(idBatch:str="",idBike:int=0,defect:str=""):
     try:
         database =db.DB()
+
+        #Filtro sulla base dell'id del lotto
         if idBatch != "":
             query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
             Production.Time_Product, Production.Defect 
             FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
             WHERE Production.ID_Batch ='{idBatch}'"""
+        
+        #Filtro sulla base dell'id delle bici
         elif idBike != 0:
             query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
             Production.Time_Product, Production.Defect 
             FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
             WHERE Production.ID_Bike ={idBike}"""
+        
+        #Filtro sulla base della difettosità
         elif defect != "":
             query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
             Production.Time_Product, Production.Defect 
             FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
             WHERE Production.Defect ='{defect}'"""
-
 
         dataBike = database.select(query)
         database.disconnect()
@@ -191,9 +195,8 @@ async def showProdFilter(idBatch:str="",idBike:int=0,defect:str=""):
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
-
+#Route Get utilizzata per visualizzazione dello storico di tutte le bici prodotte
 @app.get("/prod")
-
 async def showProd():
     try:
         database =db.DB()
@@ -208,13 +211,12 @@ async def showProd():
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
-
+#Route POST utilizzata per modificare il tipo di bici che si possono produrre
 @app.post("/edit-bike/")
 async def editBike(listBike:EditBikes):
-    
     try:
         database =db.DB()
-    
+        #Trasformazione dei dati ricevuti in oggetto
         data = listBike.model_dump()
         query= "UPDATE Bike_Type SET Descri = %s, Defect_Coefficient= %s WHERE ID_Type = %s"
         dataQ = (data["desc"],data["defCoef"],data["id"])
@@ -225,12 +227,11 @@ async def editBike(listBike:EditBikes):
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
+#Route POST utilizzata per modificare le tempistiche dei singoli task
 @app.post("/edit-task/")
 async def editTask(listTask:EditTask):
-    
     try:
         database =db.DB()
-            
         data = listTask.model_dump()
         query= "UPDATE Time_Task SET Min = %s, Max= %s WHERE ID_Task = %s AND ID_Bike =  %s"
         dataQ = (data["min"],data["max"],data["idTask"],data["idBike"])
@@ -241,18 +242,20 @@ async def editTask(listTask:EditTask):
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
+#Route POST utilizzata per la creazione dei graifici di analisi
 @app.post("/create-chart/")
 async def createChart(listParam:CreateChart):
     try:
         database =db.DB()
         data = listParam.model_dump()
-        
+        #Se l'argomento total ricevuto è diverso da "false" crea un grafico con tutti i dati
         if data["total"] != "false":
             query = """SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
             Production.Time_Product, Production.Defect 
             FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type"""
-            
+        
+        #Se l'argomento "idbatch" ricevuto è diverso da "false" crea un grafico per uno specifico lotto di produzione
         elif data["idBatch"] != "false":
             query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
@@ -260,6 +263,7 @@ async def createChart(listParam:CreateChart):
             FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
             WHERE Production.ID_Batch ='{data["idBatch"]}'"""
 
+        #Se l'argomento "idBike" ricevuto è diverso da 0 crea un grafico per uno specifico tipo di bici
         elif data["idBike"] != 0:
             query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
             Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
@@ -269,12 +273,15 @@ async def createChart(listParam:CreateChart):
 
         dataBike = database.select(query)
         database.disconnect()
+
+        #Solo quando il grafico viene creato restituisco il percorso che verrà utilizzato per visualizzarlo sul frontend
         path =analysis(dataBike)
         return {"path":path}
     
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
-   
+
+#Esecuzione del server uvicorn
 if __name__ == "__main__":
    uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
 
