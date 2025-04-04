@@ -2,6 +2,7 @@
 import mainBike
 import db
 from analysis import analysis
+from random import randint
 
 #Dati db simulati
 dataBike = [(1, 'Mountain Bike', 0.003), (2, 'Racing Bike', 0.007), (3, 'Electric Bike', 0.005), (4, 'City Bike', 0.002)]
@@ -21,9 +22,12 @@ dataTime = [(1, 1, 1, 30, 60), (5, 1, 2, 10, 20), (9, 1, 3, 20, 40),
     (24, 4, 6, 10, 20), (28, 4, 7, 10, 20), (32, 4, 8, 5, 10), (36, 4, 9, 5, 10),
     (40, 4, 10, 5, 10), (44, 4, 11, 5, 10), (48, 4, 12, 5, 10), (52, 4, 13, 15, 25), (56, 4, 14, 10, 20)]
 
+#Archivio produzione simulato
+archiveDB= ""
+
 print("\nBenvenuto nell'interfaccia CLI per la produzione delle bici!")
 
-#variabile bandiera per l'utilizzo del db reale
+#Variabile bandiera per l'utilizzo del db reale
 useDB = False
 
 while True:
@@ -34,19 +38,18 @@ while True:
     print("-----------")
     #Se reale richiama i dati dal db
     if selectDB == "1":
-        try:
-            database =db.DB()
-            query = "SELECT * FROM Bike_Type"
-            dataBike = database.select(query)
-            query = "SELECT * FROM Time_Task ORDER BY ID_Bike, ID_Task"
-            dataTime = database.select(query)
-            useDB = True
-            break
-        except:
-            print("\nERRORE nella connessione al DB!")
+            try:
+                database =db.DB()
+                useDB = True
+                query = "SELECT * FROM Bike_Type"
+                dataBike = database.select(query)
+                query = "SELECT * FROM Time_Task ORDER BY ID_Bike, ID_Task"
+                dataTime = database.select(query)
+                break
+            except:
+                print("Errore di Connessione!")
     
     elif selectDB =="2":
-        db
         break
 
     elif selectDB =="3":
@@ -69,10 +72,44 @@ while True:
 7 per uscire: """
     selectMenu = input(menu)
     print("-----------")
-    if selectMenu ==1:
+
+    #Produzione bici
+    if selectMenu =="1":
+        # scelta del numero di postazioni di lavoro o selezione randomica
+        nStations = input("Quante postazioni di lavoro ha l'azienda (0 per valore random): ")
+        if not nStations.isdecimal():
+            print("Valore non valido!")
+            continue
+        elif nStations == "0":
+            nStations = str(randint(1,20))
+
+        # scelta del numero di ore lavorative o selezione randomica
+        hoursDay = input("Quante ore di lavoro fa al giorno l'azienda (0 per valore random): ")
+        if not hoursDay.isdecimal():
+            print("Valore non valido!")
+            continue
+        elif hoursDay == "0":
+            hoursDay = str(randint(4,24))
         
-        pass
-    elif selectMenu == 7:
+        # scelta del numero di bici del tipo1 da produrre o selezione randomica
+        nBike1 = input(f"Quante {str(dataBike[0][1])} vuoi produrre (0 per valore random): ")
+        if not nBike1.isdecimal():
+            print("Valore non valido!")
+            continue
+        elif hoursDay == "0":
+            hoursDay = str(randint(4,24))
+        
+
+
+        #Se hai scelto il db reale recupera dati
+        if useDB:
+            query = "SELECT * FROM Bike_Type"
+            dataBike = database.select(query)
+            query = "SELECT * FROM Time_Task ORDER BY ID_Bike, ID_Task"
+            dataTime = database.select(query)
+        costructBatch = mainBike.ConstructionBike(nStations, hoursDay,batchBike,dataBike,dataTime)
+
+    elif selectMenu == "7":
         print("Grazie per aver utilizzato il programma!")
         break
     else:
