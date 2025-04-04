@@ -1,7 +1,7 @@
 //Variabile che contiene l'url del backend
 let urlBackEnd = "http://127.0.0.1:8000";
 
-//Variabili per l'utilizzo dei valori di imput
+//Variabili per l'utilizzo dei valori di input e dei form
 let form = document.getElementsByClassName("form");
 let idBatchG = document.getElementById("idBatchG");
 let idBikeG = document.getElementById("idBikeG");
@@ -20,14 +20,14 @@ function toggleForm(id) {
 
 //Funzione che fa una chiamata POST per visualizzare i grafici
 function getChart(parameter) {
-  
-  //Creo l'oggetto con valori preimpostati
+
+  //Creo l'oggetto da inviare nel body della richiesta con valori preimpostati
   let createChart = {
     "total": "false",
     "idBatch": "false",
     "idBike": 0
-  }
-  
+  };
+
   //In base al tipo di grafico che voglio creare popolo i parametri 
   if (parameter === 0) {
     createChart["total"] = "true";
@@ -53,12 +53,13 @@ function getChart(parameter) {
     }
   }
 
-  const urlCreateChart = urlBackEnd + '/create-chart/'
+  // Url per la richiesta
+  const urlCreateChart = urlBackEnd + '/create-chart/';
 
-  // Lancio il loader in attesa dei dati
+  // Visualizzo il loader in attesa dei dati
   result.innerHTML = "<div class='loader'></div>";
 
-  // Gestione della richiesta Post
+  // Gestione della richiesta POST
   fetch(urlCreateChart, {
     method: 'POST',
     headers: {
@@ -77,7 +78,7 @@ function getChart(parameter) {
       form[0].classList.add("formHide");
       form[1].classList.add("formHide");
 
-      //Se non ho errori nella richiesta, inserisco nell'html la path del grafico creato
+      //Se non ho errori nella richiesta, inserisco nell'html la path del grafico creato e lo visualizzo
       result.innerHTML = '<img src="' + urlBackEnd + "/" + data["path"] + '" alt="chart">';
 
     })

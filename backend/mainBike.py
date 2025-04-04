@@ -53,7 +53,7 @@ class Bike:
 
 #Classe che si occupa della produzione delle bici
 class ConstructionBike:
-    def __init__(self, nStations, hoursDay, bikeBatch, dataBike,dataTime, database):
+    def __init__(self, nStations, hoursDay, bikeBatch, dataBike,dataTime):
         #creazione dell'id di lotto di produzione in maniera casuale
         self._idBatch = ''.join(choices(string.ascii_letters + string.digits, k=8))
         #Numero di postazioni di lavorazione
@@ -70,8 +70,6 @@ class ConstructionBike:
         self.costruction(bikeBatch, dataBike,dataTime)
         #Richiamo del metodo per aggiornare i giorni di lavorazione
         self.setWorkingDays()
-        #Richiamo del metodo per inserire le informazioni nel database
-        self.insertDB(database)
     
     """
     Metodo per la produzione effettiva, riceve come argomenti:

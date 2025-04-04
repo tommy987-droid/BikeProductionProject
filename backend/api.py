@@ -65,7 +65,10 @@ async def productionBike(nStations: int=1, hoursDay: int=8 , bike1:int=0,bike2:i
         
         #Produzione effettiva del lotto di bici
         global costructBatch
-        costructBatch = mainBike.ConstructionBike(nStations, hoursDay,batchBike,dataBike,dataTime,database)
+        costructBatch = mainBike.ConstructionBike(nStations, hoursDay,batchBike,dataBike,dataTime)
+        
+        #Richiamo del metodo per salvare le bici prodotte nel db
+        costructBatch.insertDB(database)
         
         #Creazione dell'oggetto da restituire che conterrà le bici prodotte e il tempo di produzione
         objReturn = {"bikeMake":{},"timeWork":0}
