@@ -1,10 +1,11 @@
-#Importazione dei miei script 
+# Importazione dei miei script 
 import mainBike
 import db
 from analysis import analysis
 from random import randint
+from datetime import datetime
 
-#Dati db simulati
+# Dati db simulati
 dataBike = [[1, 'Mountain Bike', 0.003], [2, 'Racing Bike', 0.007], [3, 'Electric Bike', 0.005], [4, 'City Bike', 0.002]]
 
 dataTime = [[1, 1, 1, 30, 60], [5, 1, 2, 10, 20], [9, 1, 3, 20, 40], 
@@ -31,20 +32,20 @@ dataTask =[[1, 'Assemblaggio del telaio'], [2, 'Installazione della forcella'],
     [11, 'Installazione pedali e guarnitura'], [12, 'Installazione di sella e reggisella'], 
     [13, 'Controllo qualità e regolazioni'], [14, 'Imballaggio ed etichettatura']]
 
-#Archivio produzione simulato
-archiveProductionDB= [["ID_Batch", "Date_Time", "Working_Days","ID_Bike", "Time_Product", "Defect"]]
+# Archivio produzione simulato
+archiveProductionDB= []
 
 print("\nBenvenuto nell'interfaccia CLI per la produzione delle bici!")
 
-#Variabile bandiera per l'utilizzo del db reale
+# Variabile bandiera per l'utilizzo del db reale
 useDB = False
 
 while True:
     print("-----------\n")
     print("Vuoi utilizzare il programma con un db reale o con un db simulato?")
-    #Scelta dell'utilizzo di un db reale o simulato
+    # Scelta dell'utilizzo di un db reale o simulato
     selectDB = input("1 per DB reale\n2 per DB simulato\n3 per uscire: ")
-    #Se reale richiama i dati dal db
+    # Se reale richiama i dati dal db
     if selectDB == "1":
             try:
                 database =db.DB()
@@ -72,19 +73,19 @@ while True:
 while True:
     print("\n-----------")
     print("Cosa vuoi fare?")
-    #menu principale
+    # Menu principale
     menu = """1 per produrre le bici
 2 per vedere le tipologie di bici disponibili
 3 per modificare le tipologie di bici che si possono produrre
 4 per vedere le tempistiche dei task
 5 per modificare le tempistiche dei task
 6 per vedere lo storico delle bici prodotte
-7 per vedere le analisi dei dati
+7 per visualizzare i grafici dei tempi di produzione
 8 per uscire: """
     selectMenu = input(menu)
     print("\n-----------")
 
-    #Produzione bici
+    # Produzione bici
     if selectMenu =="1":
         # Scelta del numero di postazioni di lavoro o selezione randomica
         nStations = input("Quante postazioni di lavoro ha l'azienda (0 per valore random): ")
@@ -154,28 +155,28 @@ while True:
         
         # Altrimenti salva i dati nel database simulato
         else:
-            data = [[el[0],el[1], el[2],el[3],el[5],el[6]] for el in costructBatch.getListEndWork()]
+            data = [[el[0],el[1],el[3],el[4],el[2],el[5],el[6]] for el in costructBatch.getListEndWork()]
             archiveProductionDB.extend(data)
         
-        # Stampa output
+        # Visualizza output
         print("\n-----------")
         print(f"Tempo totale: {costructBatch.getTimeWork()}")
         print("-----------\n")
 
-        #Intestazione per stampa produzione
+        # Intestazione per stampa produzione
         print("ID_Batch | Date_Time | Working_Days | ID_Bike | Type_Bike | Time_Product | Defect")
         print("-----------")
         for row in costructBatch.getListEndWork():
             print(row[0]+" | "+row[1]+" | "+row[2]+" | "+row[3]+" | "+row[4]+" | "+row[5]+"minutes  | "+row[6])
         
-    #Stampa delle caratteristiche delle bici che si possono produrre
+    # Visualizzazione delle caratteristiche delle bici che si possono produrre
     elif selectMenu == "2":
         print("\nID_Bike | Type_Bike | Defect_Coefficient")
         print("-----------")
         for row in dataBike:
             print(f"{row[0]} | {row[1]} | {row[2]}")
     
-    #Modifica bici da produrre
+    # Modifica bici da produrre
     elif selectMenu == "3":
         # Inserimento dell'id della bici da modificare e verifica input
         idBikeEdit = input("Inserisci ID bici da modificare (valore da 1 a 4): ")
@@ -198,41 +199,219 @@ while True:
         
         # Se hai scelto il db reale aggiorna i dati nel database
         if useDB:
-            query= "UPDATE Bike_Type SET Descri = %s, Defect_Coefficient= %s WHERE ID_Type = %s"
-            dataQ = (descBike,defectBike,idBikeEdit)
-            rowU =database.update(query, dataQ)
+            try:
+                query= "UPDATE Bike_Type SET Descri = %s, Defect_Coefficient= %s WHERE ID_Type = %s"
+                dataQ = (descBike,defectBike,idBikeEdit)
+                rowU =database.update(query, dataQ)
 
-            # E legge i dati i aggiornati
-            query = "SELECT * FROM Bike_Type"
-            dataBike = database.select(query)
+                # E legge i dati i aggiornati
+                query = "SELECT * FROM Bike_Type"
+                dataBike = database.select(query)
+            except:
+                print("Errore nella connessione al Database")
+                continue
+
         
         # Altrimenti aggiorno il db simulato
         else:
             dataBike[idBikeEdit-1][1]= descBike
             dataBike[idBikeEdit-1][2]= defectBike
         
-        #Stampa delle bici modificate
+        # Visualizzazione delle bici modificate
         print("\nID_Bike | Type_Bike | Defect_Coefficient")
         print("-----------")
         for row in dataBike:
             print(f"{row[0]} | {row[1]} | {row[2]}")
     
-    #Stampa caratteristiche singoli task
+    # Visualizzazione caratteristiche singoli task
     elif selectMenu == "4":
-        print("ID_BiKe | Type_Bike | ID_Task | Type_Task | Min_Time | Max_Time")
+        print("\nID_BiKe | Type_Bike | ID_Task | Type_Task | Min_Time | Max_Time")
         print("-----------")
         for row in dataTime:
             print(f"{row[1]} | {dataBike[row[1]-1][1]} | {row[2]} | {dataTask[row[2]-1][1]} | {row[3]} | {row[4]}")
 
+    # Modifica tempistiche task
+    elif selectMenu == "5":
 
+        # Inserimento dell'id della bici di cui modifichiamo il task e verifica input
+        idBikeEdit = input("Inserisci ID bici di cui vuoi modificare il Task (valore da 1 a 4): ")
+        listIdBike = ["1","2","3","4"]
+        if idBikeEdit not in listIdBike:
+            print("Valore non valido!")
+            continue
+        idBikeEdit = int(idBikeEdit)
+
+        # Inserimento dell'id del task da modificare e verifica input
+        idTaskEdit = input("Inserisci ID del Task da modificare (valore da 1 a 14): ")
+        listIdTask = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14"]
+        if idTaskEdit not in listIdTask:
+            print("Valore non valido!")
+            continue
+        idTaskEdit = int(idTaskEdit)
+
+        # Inserimento valore minimo dei tempi di lavorazione
+        minEdit = input("Inserisci valore per la tempistica minima di esecuzione del task: ")
+        if not minEdit.isdecimal():
+            print("Valore non valido!")
+            continue
+        minEdit = int(minEdit)
+
+
+        # Inserimento valore massimo dei tempi di lavorazione
+        maxEdit = input("Inserisci valore per la tempistica massima di esecuzione del task: ")
+        if not maxEdit.isdecimal():
+            print("Valore non valido!")
+            continue
+        maxEdit = int(maxEdit)
+
+        # Se hai scelto il db reale aggiorna i dati nel database
+        if useDB:
+            try:
+                query= "UPDATE Time_Task SET Min = %s, Max= %s WHERE ID_Task = %s AND ID_Bike =  %s"
+                dataQ = (minEdit,maxEdit,idTaskEdit,idBikeEdit)
+                rowU =database.update(query, dataQ)
+
+                # E legge i dati i aggiornati
+                query = "SELECT * FROM Time_Task ORDER BY ID_Bike, ID_Task"
+                dataTime = database.select(query)
+            except:
+                print("Errore nella connessione al Database")
+                continue
+        
+        # Altrimenti aggiorno il db simulato
+        else:
+            index = 0
+            found = False
+            for row in dataTime:
+                if row[1] == idBikeEdit and row[2] == idTaskEdit:
+                    dataTime[index][3] = minEdit
+                    dataTime[index][4] = maxEdit
+        
+        # Visualizzazione task modificati
+        print("\nID_BiKe | Type_Bike | ID_Task | Type_Task | Min_Time | Max_Time")
+        print("-----------")
+        for row in dataTime:
+            print(f"{row[1]} | {dataBike[row[1]-1][1]} | {row[2]} | {dataTask[row[2]-1][1]} | {row[3]} | {row[4]}")
+            
+
+    # Visualizzazione delle Storico delle bici prodotte
+    elif selectMenu == "6":
+        # Se hai scelto il db reale aggiorna i dati nel database
+        if useDB:
+            try:
+                query = """SELECT Production.ID_Batch, Production.Date_Time, 
+                Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
+                Production.Time_Product, Production.Defect 
+                FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type"""
+                archiveProductionDB = database.select(query)
+            except:
+                print("Errore nella connessione al Database")
+                continue
+        
+        # Visualizzazione delle Storico delle bici prodotte
+        print("\nID_Batch | Date | ID_Bike | Type_Bike | Working_Days | Time_Product | Defect_Coefficient")
+        print("-----------")
+        for row in archiveProductionDB:
+            print(f"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]}")       
+
+
+    # visualizzazione dei grafici dei tempi di produzione
+    elif selectMenu == "7":
+        if len(archiveProductionDB) <1 and not useDB:
+            print("Devi produrre bici per poter creare grafici!")
+            continue
+
+        selectGraph = input("1 per Grafico con tutti i dati\n2 per Grafico di specifico lotto di produzione\n3 per Grafico di specifico tipo di bici: ")
+
+        # Crea un grafico con tutti i dati
+        if selectGraph == "1":
+
+            # Se hai scelto il db reale leggi i dati dal db
+            if useDB:
+                try:
+                    query = """SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
+                    Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
+                    Production.Time_Product, Production.Defect 
+                    FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type"""
+                    dataGraph = database.select(query)
+
+                except:
+                    print("Errore nella connessione al Database")
+                    continue
+                
+            # Altrimenti formatta i dati del db simulato
+            else:
+                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB]
+
+            #print("grafico",dataGraph)
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+        
+        # Crea un grafico per uno specifico lotto di produzione
+        elif selectGraph == "2":
+            
+            idBatchGraph = input("Inserisci l'id del lotto di cui vuoi creare il grafico: ")
+            # Se hai scelto il db reale leggi i dati dal db
+            if useDB:
+                try:
+                    query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
+                    Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
+                    Production.Time_Product, Production.Defect 
+                    FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
+                    WHERE Production.ID_Batch ='{idBatchGraph}'"""
+                    dataGraph = database.select(query)
+
+                except:
+                    print("Errore nella connessione al Database")
+                    continue
+            
+            # Altrimenti formatta i dati del db simulato
+            else:
+                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB if el[0] == idBatchGraph]
+            
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+
+        #Se l'argomento "idBike" ricevuto è diverso da 0 crea un grafico per uno specifico tipo di bici
+        elif selectGraph == "3":
+
+            # Inserimento dell'id della bici di cui modifichiamo il task e verifica input
+            idBikeGraph = input("Inserisci ID bici di cui vuoi creare il grafico (valore da 1 a 4): ")
+            listIdBike = ["1","2","3","4"]
+            if idBikeGraph not in listIdBike:
+                print("Valore non valido!")
+                continue
+            idBikeGraph = int(idBikeGraph)
+            
+            # Se hai scelto il db reale leggi i dati dal db
+            if useDB:
+                try:
+                    query = f"""SELECT Production.ID , Production.ID_Batch, Production.Date_Time, 
+                    Production.ID_Bike,Bike_Type.Descri,Production.Working_Days, 
+                    Production.Time_Product, Production.Defect 
+                    FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
+                    WHERE Production.ID_Bike ={idBikeGraph}"""
+                except:
+                    print("Errore nella connessione al Database")
+                    continue
+            
+            # Altrimenti formatta i dati del db simulato
+            else:
+                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB if int(el[2]) == idBikeGraph]
+            
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+
+
+    # Uscita dal programma
     elif selectMenu == "8":
         print("Grazie per aver utilizzato il programma!")
         break
     else:
         print("Comando non valido!")
 
-"""
-list_endWordk =[['mPW5iRXm', '2025-04-04 16:23:57', '0', '1', 'Mountain Bike', '307', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '2', 'Racing Bike', '255', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '3', 'Electric Bike', '263', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '4', 'City Bike', '194', 'False']]
-archiveDb =[['ID_Batch', 'Date_Time', 'Working_Days', 'ID_Bike', 'Time_Product', 'Defect'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '1', '307', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '2', '255', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '3', '263', 'False'], ['mPW5iRXm', '2025-04-04 16:23:57', '0', '4', '194', 'False']]
-"""
+
         

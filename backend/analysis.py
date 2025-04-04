@@ -76,5 +76,3 @@ def analysis(data):
 
     #Quando il grafico è salvato restituisce il percorso
     return path
-
-    
