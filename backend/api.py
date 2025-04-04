@@ -245,7 +245,7 @@ async def editTask(listTask:EditTask):
     except:
         raise HTTPException(status_code=503, detail="Error Connection DB")
 
-#Route POST utilizzata per la creazione dei graifici di analisi
+#Route POST utilizzata per la creazione dei grafici di analisi
 @app.post("/create-chart/")
 async def createChart(listParam:CreateChart):
     try:
