@@ -147,7 +147,7 @@ function getIdTask() {
         // Creazione della tabella in cui inserirò i dati dei task filtrati
         let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
         for (const [key, value] of Object.entries(data)) {
-          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td></tr>";
+          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
         }
         html += "</table>";
         // Inserimento della tabella nell'html
@@ -189,7 +189,7 @@ function getIdBike() {
         let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
         for (const [key, value] of Object.entries(data)) {
 
-          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td></tr>";
+          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
         }
         html += "</table>";
         // Inserimento della tabella nell'html
