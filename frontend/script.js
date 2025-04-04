@@ -42,10 +42,10 @@ getBike()
 function randomData() {
   nStations.value = Math.floor(Math.random() * 20) + 1;
   hoursDay.value = Math.floor(Math.random() * 21) + 4;
-  bike1.value = Math.floor(Math.random() * 51) + 0;
-  bike2.value = Math.floor(Math.random() * 51) + 0;
-  bike3.value = Math.floor(Math.random() * 51) + 0;
-  bike4.value = Math.floor(Math.random() * 51) + 0;
+  bike1.value = Math.floor(Math.random() * 51);
+  bike2.value = Math.floor(Math.random() * 51);
+  bike3.value = Math.floor(Math.random() * 51);
+  bike4.value = Math.floor(Math.random() * 51);
 
 }
 
