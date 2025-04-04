@@ -100,7 +100,7 @@ function editBike() {
         result.innerHTML = "<h2>Connection Error<h2>";
       });
   }
-  // Scrollo la pagina in alto
+  // Scorrimento della pagina in alto
   scroll(0, 0);
 
   // Nascondo il form

@@ -61,7 +61,7 @@ function toggleForm(id) {
   form[id].classList.toggle("formHide");
 }
 
-//Funzione che fa una chiamata GET per filtrare la visualizzare dell'archivio delle bici prodotte in base all'id del lotto
+//Funzione che fa una chiamata GET per filtrare la visualizzazione dell'archivio delle bici prodotte in base all'id del lotto
 function getIdBatch() {
 
   // Importazione valori di input e validazione
@@ -71,6 +71,7 @@ function getIdBatch() {
     window.alert("ERROR - ID Batch Required");
 
   } else {
+
     // Url per la richiesta
     const urlGet = urlBackEnd + '/prod/view?idBatch=' + idBatchPV;
 
@@ -83,27 +84,35 @@ function getIdBatch() {
         return response.json();
       })
       .then(data => {
-
+        // Creazione della tabella in cui inserirò i dati delle bici prodotte filtrati
         let html = "<table><tr><th>ID</th><th>ID Batch</th><th>Date</th><th>ID Bike</th><th>Type Bike</th><th>Working Days</th><th>Production Time</th><th>Production Defect</th></tr>";
         for (const [key, value] of Object.entries(data)) {
           html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td><td>" + value[6] + " Minutes</td><td>" + value[7] + "</td></tr>";
         }
         html += "</table>";
+        // Inserimento della tabella nell'html
         result.innerHTML = html;
+        // Nascondo il form di input
         form[0].classList.toggle("formHide");
       })
       .catch(error => {
+        //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
   }
 };
 
+//Funzione che fa una chiamata GET per filtrare la visualizzazione dell'archivio delle bici prodotte in base all'id della bici
 function getIdBike() {
+
+  // Importazione valori di input e validazione
   let idBikePV = idBikeP.value;
   idBikeP.value = ""
   if (idBikePV === "") {
     window.alert("ERROR - ID Bike Required");
   } else {
+
+    // Url per la richiesta
     const urlGet = urlBackEnd + '/prod/view?idBike=' + idBikePV;
 
     // Gestione della richiesta GET
@@ -115,27 +124,36 @@ function getIdBike() {
         return response.json();
       })
       .then(data => {
-
+        // Creazione della tabella in cui inserirò i dati delle bici prodotte filtrati
         let html = "<table><tr><th>ID</th><th>ID Batch</th><th>Date</th><th>ID Bike</th><th>Type Bike</th><th>Working Days</th><th>Production Time</th><th>Production Defect</th></tr>";
         for (const [key, value] of Object.entries(data)) {
           html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td><td>" + value[6] + " Minutes</td><td>" + value[7] + "</td></tr>";
         }
         html += "</table>";
+
+        // Inserimento della tabella nell'html
         result.innerHTML = html;
+
+        // Nascondo il form di input
         form[1].classList.toggle("formHide");
       })
       .catch(error => {
+        //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
   }
 };
 
+//Funzione che fa una chiamata GET per filtrare la visualizzazione dell'archivio delle bici prodotte in base alla difettosità
 function getDefect() {
+
+  // Importazione valori di input e validazione
   let idDefectPV = idDefectP.value;
 
   if (idDefectPV === "") {
     window.alert("ERROR - Defect Required");
   } else {
+    // Url per la richiesta
     const urlGet = urlBackEnd + '/prod/view?defect=' + idDefectPV;
 
     // Gestione della richiesta GET
@@ -147,16 +165,19 @@ function getDefect() {
         return response.json();
       })
       .then(data => {
-
+        // Creazione della tabella in cui inserirò i dati delle bici prodotte filtrati
         let html = "<table><tr><th>ID</th><th>ID Batch</th><th>Date</th><th>ID Bike</th><th>Type Bike</th><th>Working Days</th><th>Production Time</th><th>Production Defect</th></tr>";
         for (const [key, value] of Object.entries(data)) {
           html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td><td>" + value[6] + " Minutes</td><td>" + value[7] + "</td></tr>";
         }
         html += "</table>";
+        // Inserimento della tabella nell'html
         result.innerHTML = html;
+        // Nascondo il form di input
         form[2].classList.toggle("formHide");
       })
       .catch(error => {
+        //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
   }
