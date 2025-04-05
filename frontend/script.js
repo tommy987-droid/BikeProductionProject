@@ -41,7 +41,7 @@ getBike()
 //Funzione per generare valori randomici per la creazione delle bici
 function randomData() {
   nStations.value = Math.floor(Math.random() * 20) + 1;
-  hoursDay.value = Math.floor(Math.random() * 21) + 4;
+  hoursDay.value = Math.floor(Math.random() * 20) + 4;
   bike1.value = Math.floor(Math.random() * 51);
   bike2.value = Math.floor(Math.random() * 51);
   bike3.value = Math.floor(Math.random() * 51);

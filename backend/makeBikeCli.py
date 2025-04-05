@@ -102,7 +102,7 @@ while True:
             print("Valore non valido!")
             continue
         elif hoursDay == "0":
-            hoursDay = str(randint(4,24))
+            hoursDay = str(randint(4,23))
             print(f"N.Ore giornaliere: {hoursDay}")
         
         # Scelta del numero di bici del tipo1 da produrre o selezione randomica
