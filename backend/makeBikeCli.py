@@ -322,7 +322,6 @@ while True:
             continue
 
         selectGraph = input("1 per Grafico con tutti i dati\n2 per Grafico di specifico lotto di produzione\n3 per Grafico di specifico tipo di bici: ")
-
         # Crea un grafico con tutti i dati
         if selectGraph == "1":
 
@@ -341,12 +340,16 @@ while True:
                 
             # Altrimenti formatta i dati del db simulato
             else:
-                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB]
+                
+                dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB))]
 
-            #print("grafico",dataGraph)
-            # Solo quando il grafico viene creato restituisco il percorso
-            path =analysis(dataGraph)
-            print("\nClicca sul link per vedere il grafico: -> ",path)
+            # Verifica numerosità dei dati
+            try:
+                # Solo quando il grafico viene creato restituisco il percorso
+                path =analysis(dataGraph)
+                print("\nClicca sul link per vedere il grafico: -> ",path)
+            except:
+                print("\nErrore - La produzione è troppo bassa per poter creare il grafico!")
         
         # Crea un grafico per uno specifico lotto di produzione
         elif selectGraph == "2":
@@ -368,11 +371,15 @@ while True:
             
             # Altrimenti formatta i dati del db simulato
             else:
-                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB if el[0] == idBatchGraph]
+                dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB)) if archiveProductionDB[el][0] == idBatchGraph]
             
-            # Solo quando il grafico viene creato restituisco il percorso
-            path =analysis(dataGraph)
-            print("\nClicca sul link per vedere il grafico: -> ",path)
+            # Verifica numerosità dei dati
+            try:
+                # Solo quando il grafico viene creato restituisco il percorso
+                path =analysis(dataGraph)
+                print("\nClicca sul link per vedere il grafico: -> ",path)
+            except:
+                print("\nErrore - Lotto inesistente o che contiene un numero basso di bici per la produzione del grafico!")
 
         #Se l'argomento "idBike" ricevuto è diverso da 0 crea un grafico per uno specifico tipo di bici
         elif selectGraph == "3":
@@ -393,17 +400,23 @@ while True:
                     Production.Time_Product, Production.Defect 
                     FROM Production INNER JOIN Bike_Type ON Production.ID_Bike = Bike_Type.ID_Type
                     WHERE Production.ID_Bike ={idBikeGraph}"""
+                    dataGraph = database.select(query)
                 except:
                     print("Errore nella connessione al Database")
                     continue
             
             # Altrimenti formatta i dati del db simulato
             else:
-                dataGraph = [[archiveProductionDB.index(el),el[0],datetime.now(),el[2],el[3],el[4],int(el[5]),el[6]] for el in archiveProductionDB if int(el[2]) == idBikeGraph]
-            
-            # Solo quando il grafico viene creato restituisco il percorso
-            path =analysis(dataGraph)
-            print("\nClicca sul link per vedere il grafico: -> ",path)
+                dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB)) if int(archiveProductionDB[el][2]) == idBikeGraph]
+               
+
+            # Verifica numerosità dei dati
+            try: 
+                # Solo quando il grafico viene creato restituisco il percorso
+                path =analysis(dataGraph)
+                print("\nClicca sul link per vedere il grafico: -> ",path)
+            except:
+                print("\nErrore - Servono più dati su questo tipo di bici per poter creare il grafico!")
 
 
     # Uscita dal programma
