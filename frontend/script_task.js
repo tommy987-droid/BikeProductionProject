@@ -10,6 +10,85 @@ let idBike2 = document.getElementById("idBike2T");
 let idTask2 = document.getElementById("idTask2T");
 let minTime = document.getElementById("minTimeT");
 let maxTime = document.getElementById("maxTimeT");
+let rowsPageTag = document.getElementById("rowsPage");
+let currentPageTag = document.getElementById("currentPage");
+let totalPageTag = document.getElementById("totalPage");
+let dataApi = "";
+let outPagination = "";
+
+// Funzione per la creazione della tabella in cui inserirò i dati delle bici prodotte
+function createTable(data) {
+
+  // Creazione della tabella in cui inserirò i dati dei task
+  let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
+
+  for (const [key, value] of Object.entries(data)) {
+    html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
+  };
+  html += "</table>";
+
+  // Inserimento della tabella nell'html
+  result.innerHTML = html;
+};
+
+// Funzione che esegue la paginazione
+function pagination(elements, currentPag) {
+  // Se non specificato considero di essere alla pagina numero 1
+  let pag = currentPag || 1;
+  // Numero di elementi per pagina
+  let elemPag = 14;
+  // Calcolo l'offset di spostamento della "finestra" di elementi che voglio restituire
+  let offset = (pag - 1) * elemPag;
+  // Estraggo la porzione di oggetti che mi interessa
+  let elemPagin = elements.slice(offset).slice(0, elemPag);
+  // Calcolo il numero totale di pagine
+  let totalPag = Math.ceil(elements.length / elemPag);
+
+  // Restituisco un oggetto contenente la porzione paginata e tutte le informazioni necessarie alla navigazione
+  return {
+    currentPage: pag,
+    previousPage: pag - 1 ? pag - 1 : null,
+    nextPage: totalPag > pag ? pag + 1 : null,
+    totalPag: totalPag,
+    elemPagin: elemPagin
+  };
+};
+
+// Funzione di gestione della visualizzazione dei dati
+function dataManag(data, pag) {
+  // Salvo i dati nella variabile globale per poterli riutilizzare in seguito
+  dataApi = data;
+
+  // Chiamo la funzione di paginazione per suddividerli
+  outPagination = pagination(data, pag);
+
+  // Salvo nella variabile data solo gli elementi della prima pagina
+  data = outPagination.elemPagin;
+
+  // Con questi elementi vado a creare la tabella visualizzata
+  createTable(data);
+
+  // Popolo gli elementi di navigazione per visualizzare il totale delle pagine, la paginacorrente e le righe per pagina 
+  totalPageTag.innerText = outPagination.totalPag;
+  currentPageTag.innerText = outPagination.currentPage;
+  rowsPageTag.innerText = data.length;
+};
+
+// Funzione che effettua effettivamente la navigazione tra le pagine
+function navPage(choice) {
+  // Se viene passato il valore 0 il pulsante cliccato è Previous e quindi si vogliono vedere i dati della pagina precedente
+  if (choice === 0) {
+    if (outPagination.previousPage) {
+      dataManag(dataApi, outPagination.previousPage);
+    }
+  }
+  // Altrimenti il pulsante cliccato è Next e quindi si vogliono vedere i dati della pagina successiva
+  else {
+    if (outPagination.nextPage) {
+      dataManag(dataApi, outPagination.nextPage);
+    }
+  };
+};
 
 //Funzione che fa una chiamata GET per visualizzare le tempistiche dei task
 function getTask() {
@@ -28,16 +107,9 @@ function getTask() {
     })
     .then(data => {
 
-      // Creazione della tabella in cui inserirò i dati dei task
-      let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
+      // Passo i dati alla funzione per gestirne la visualizzazione
+      dataManag(data);
 
-      for (const [key, value] of Object.entries(data)) {
-        html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
-      }
-      html += "</table>";
-
-      // Inserimento della tabella nell'html
-      result.innerHTML = html;
     })
     .catch(error => {
 
@@ -61,7 +133,7 @@ function toggleForm(id) {
   else {
     form[0].classList.add("formHide");
     form[1].classList.add("formHide");
-  }
+  };
   form[id].classList.toggle("formHide");
 }
 
@@ -111,15 +183,18 @@ function editTask() {
         window.alert(data);
 
         // Richiamo della funzione per aggiornare la visualizzazione delle tempistiche dei task
-        getTask()
+        getTask();
+        // Nascondo il form di input
+        form[0].classList.toggle("formHide");
+
       })
       .catch(error => {
 
         //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
-  }
-}
+  };
+};
 
 //Funzione che fa una chiamata GET per filtrare la visualizzazione le tempistiche dei task in base all'id del task
 function getIdTask() {
@@ -144,14 +219,9 @@ function getIdTask() {
       })
       .then(data => {
 
-        // Creazione della tabella in cui inserirò i dati dei task filtrati
-        let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
-        for (const [key, value] of Object.entries(data)) {
-          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
-        }
-        html += "</table>";
-        // Inserimento della tabella nell'html
-        result.innerHTML = html;
+        // Passo i dati alla funzione per gestirne la visualizzazione
+        dataManag(data);
+
         // Nascondo il form di input
         form[1].classList.toggle("formHide");
       })
@@ -159,7 +229,7 @@ function getIdTask() {
         //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
-  }
+  };
 };
 
 //Funzione che fa una chiamata GET per filtrare la visualizzazione le tempistiche dei task in base all'id della bici
@@ -185,15 +255,8 @@ function getIdBike() {
       })
       .then(data => {
 
-        // Creazione della tabella in cui inserirò i dati dei task filtrati
-        let html = "<table ><tr><th>ID_Bike</th><th>Description Bike</th><th>ID Task</th><th>Task Description</th><th>Min Time</th><th>Max Time</th></tr>";
-        for (const [key, value] of Object.entries(data)) {
-
-          html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + " Minutes</td><td>" + value[5] + " Minutes</td></tr>";
-        }
-        html += "</table>";
-        // Inserimento della tabella nell'html
-        result.innerHTML = html;
+        // Passo i dati alla funzione per gestirne la visualizzazione
+        dataManag(data);
         // Nascondo il form di input
         form[2].classList.toggle("formHide");
       })
@@ -201,5 +264,5 @@ function getIdBike() {
         //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
-  }
+  };
 };

@@ -71,13 +71,12 @@ async def productionBike(nStations: int=1, hoursDay: int=8 , bike1:int=0,bike2:i
         costructBatch.insertDB(database)
         
         #Creazione dell'oggetto da restituire che conterrà le bici prodotte e il tempo di produzione
-        objReturn = {"bikeMake":{},"timeWork":0}
+        objReturn = {"bikeMake":[],"timeWork":0}
         
         #Inserimento nell'oggetto delle bici prodotte
-        num = 0
         for row in costructBatch.getListEndWork():
-            objReturn["bikeMake"][num] = row
-            num +=1
+            objReturn["bikeMake"].append(row)
+            
         
         #Disconnessione DB
         database.disconnect()

@@ -10,7 +10,6 @@ let result = document.getElementsByClassName("result")[0];
 let rowsPageTag = document.getElementById("rowsPage");
 let currentPageTag = document.getElementById("currentPage");
 let totalPageTag = document.getElementById("totalPage");
-let paginationTag = document.getElementsByClassName("pagination")[0];
 let dataApi = "";
 let outPagination = "";
 
@@ -21,12 +20,12 @@ function createTable(data) {
   let html = "<table><tr><th>ID</th><th>ID Batch</th><th>Date</th><th>ID Bike</th><th>Type Bike</th><th>Working Days</th><th>Production Time</th><th>Production Defect</th></tr>";
   for (const [key, value] of Object.entries(data)) {
     html += "<tr><td>" + value[0] + "</td><td>" + value[1] + "</td><td>" + value[2] + "</td><td>" + value[3] + "</td><td>" + value[4] + "</td><td>" + value[5] + "</td><td>" + value[6] + " Minutes</td><td>" + value[7] + "</td></tr>";
-  }
+  };
   html += "</table>";
 
   // Inserimento della tabella nell'html
   result.innerHTML = html;
-}
+};
 
 // Funzione che esegue la paginazione
 function pagination(elements, currentPag) {
@@ -77,14 +76,14 @@ function navPage(choice) {
   if (choice === 0) {
     if (outPagination.previousPage) {
       dataManag(dataApi, outPagination.previousPage);
-    }
+    };
   }
   // Altrimenti il pulsante cliccato è Next e quindi si vogliono vedere i dati della pagina successiva
   else {
     if (outPagination.nextPage) {
       dataManag(dataApi, outPagination.nextPage);
-    }
-  }
+    };
+  };
 };
 
 
@@ -114,7 +113,7 @@ function getProd() {
       //In caso di errori inserisco nell'html un messaggio di errore
       result.innerHTML = "<h2>Connection Error<h2>";
     });
-}
+};
 
 // Richiamo iniziale della funzione per visualizzare l'archivio delle bici prodotte
 getProd();
@@ -134,7 +133,7 @@ function toggleForm(id) {
     form[1].classList.add("formHide");
   }
   form[id].classList.toggle("formHide");
-}
+};
 
 //Funzione che fa una chiamata GET per filtrare la visualizzazione dell'archivio delle bici prodotte in base all'id del lotto
 function getIdBatch() {
@@ -170,7 +169,7 @@ function getIdBatch() {
         //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
-  }
+  };
 };
 
 //Funzione che fa una chiamata GET per filtrare la visualizzazione dell'archivio delle bici prodotte in base all'id della bici
@@ -178,7 +177,7 @@ function getIdBike() {
 
   // Importazione valori di input e validazione
   let idBikePV = idBikeP.value;
-  idBikeP.value = ""
+  idBikeP.value = "";
   if (idBikePV === "") {
     window.alert("ERROR - ID Bike Required");
   } else {
@@ -241,6 +240,6 @@ function getDefect() {
         //In caso di errori inserisco nell'html un messaggio di errore
         result.innerHTML = "<h2>Connection Error<h2>";
       });
-  }
+  };
 };
 
