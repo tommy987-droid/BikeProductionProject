@@ -142,9 +142,9 @@ td, th {
   margin-bottom: 0px;
   width: 12%;
 }
-/*Classe per nascondere i form*/
-.formHide{
-  display: none;
+/*Classi per nascondere gli elementi*/
+.formHide, .paginationHide{
+  display: none!important;
 }
 .form2{
   width: 40%;
@@ -182,3 +182,18 @@ img{
   margin-bottom: 5%;
 }
 
+#pagination{
+  margin-top: 50px;
+  display: flex;
+
+}
+
+.pag{
+  margin: 0 auto;
+  width: 12%;
+}
+
+h3{
+  margin: auto 20px;
+  font-size: 210%;
+}
