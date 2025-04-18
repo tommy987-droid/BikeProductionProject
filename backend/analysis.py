@@ -6,9 +6,14 @@ import numpy as np
 #Funzione che riceve come argomento i dati e crea la Carta di Controllo
 def analysis(data):
     
+    
     #Trasformo in dati in array numpy
     df =np.array(data)
-    
+
+    #Se non ho dati creo un array numpy contenente solo 0
+    if df.size == 0:
+        df = np.zeros((8,8), dtype=int)
+
     #Calcolo media e deviazione standard
     meanTo = np.mean(df[:,6])
     std_dev = np.std(df[:,6])
@@ -18,19 +23,30 @@ def analysis(data):
     #Limite di Controllo Inferiore (LCL - Lower Control Limit)
     LCL = meanTo - 3 * std_dev
 
+
     #Filtro delle bici che hanno difetti e calcolo delle statistiche
     dfT = df[df[:,7]=="True"]
+
+    #Se non ho dati sulle bici con difetti creo un array numpy contenente solo 0
+    if dfT.size == 0:
+        dfT = np.zeros((8,8), dtype=int)
     meanT = np.mean(dfT[:,6])
     std_devT = np.std(dfT[:,6])
     UCLt = meanT + 3 * std_devT
     LCLt = meanT - 3 * std_devT
 
+    
     #Filtro delle bici che NON hanno difetti e calcolo delle statistiche
     dfF = df[df[:,7]=="False"]
+
+    #Se non ho dati sulle bici senza difetti creo un array numpy contenente solo 0
+    if dfF.size == 0:
+        dfF = np.zeros((8,8), dtype=int)
     meanF = np.mean(dfF[:,6])
     std_devF = np.std(dfF[:,6])
     UCLf = meanF + 3 * std_devF
     LCLf = meanF - 3 * std_devF
+    
 
     #Creazione della Figure del grafico
     fig = plt.figure(figsize=(15,10), layout='constrained')

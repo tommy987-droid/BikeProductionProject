@@ -343,13 +343,10 @@ while True:
                 
                 dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB))]
 
-            # Verifica numerosità dei dati
-            try:
-                # Solo quando il grafico viene creato restituisco il percorso
-                path =analysis(dataGraph)
-                print("\nClicca sul link per vedere il grafico: -> ",path)
-            except:
-                print("\nErrore - La produzione è troppo bassa per poter creare il grafico!")
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+            
         
         # Crea un grafico per uno specifico lotto di produzione
         elif selectGraph == "2":
@@ -373,13 +370,10 @@ while True:
             else:
                 dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB)) if archiveProductionDB[el][0] == idBatchGraph]
             
-            # Verifica numerosità dei dati
-            try:
-                # Solo quando il grafico viene creato restituisco il percorso
-                path =analysis(dataGraph)
-                print("\nClicca sul link per vedere il grafico: -> ",path)
-            except:
-                print("\nErrore - Lotto inesistente o che contiene un numero basso di bici per la produzione del grafico!")
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+            
 
         #Se l'argomento "idBike" ricevuto è diverso da 0 crea un grafico per uno specifico tipo di bici
         elif selectGraph == "3":
@@ -409,14 +403,10 @@ while True:
             else:
                 dataGraph = [[el,archiveProductionDB[el][0],datetime.now(),archiveProductionDB[el][2],archiveProductionDB[el][3],archiveProductionDB[el][4],int(archiveProductionDB[el][5]),archiveProductionDB[el][6]] for el in range(len(archiveProductionDB)) if int(archiveProductionDB[el][2]) == idBikeGraph]
                
-
-            # Verifica numerosità dei dati
-            try: 
-                # Solo quando il grafico viene creato restituisco il percorso
-                path =analysis(dataGraph)
-                print("\nClicca sul link per vedere il grafico: -> ",path)
-            except:
-                print("\nErrore - Servono più dati su questo tipo di bici per poter creare il grafico!")
+            # Solo quando il grafico viene creato restituisco il percorso
+            path =analysis(dataGraph)
+            print("\nClicca sul link per vedere il grafico: -> ",path)
+            
 
 
     # Uscita dal programma
