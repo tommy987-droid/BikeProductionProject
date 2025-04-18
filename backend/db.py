@@ -5,7 +5,7 @@ import mysql.connector
 class DB:
     def __init__(self):
         #Caricamento variabili dal file config.txt
-        with open("dbArchive/sql/config.txt") as file:
+        with open("configDB.txt") as file:
             self._data = file.read().split("\n")
         self._host = self._data[0].split(":")[1]
         self._user = self._data[1].split(":")[1]

@@ -1,5 +1,5 @@
 //Variabile che contiene l'url del backend
-let urlBackEnd = "http://127.0.0.1:8000";
+let urlBackEnd = "http://backend:8000";
 
 //Variabili per l'utilizzo dei valori di input e dei form
 let form = document.getElementsByClassName("form");

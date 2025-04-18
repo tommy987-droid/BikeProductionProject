@@ -89,7 +89,7 @@ async def productionBike(nStations: int=1, hoursDay: int=8 , bike1:int=0,bike2:i
     
     #Se ho qualsiasi problema con la connessione al DB o la produzione restituisco errore
     except:
-        raise HTTPException(status_code=503, detail="Error Connection DB or Make Bike")
+        raise HTTPException(status_code=503, detail="Error Connection DB or Build Bike")
 
 #Route Get utilizzata per visualizzazione caratteristiche generiche bici
 @app.get("/bike")
@@ -285,5 +285,5 @@ async def createChart(listParam:CreateChart):
 
 #Esecuzione del server uvicorn
 if __name__ == "__main__":
-   uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=True)
+   uvicorn.run("api:app", host="backend", port=8000, reload=True)
 

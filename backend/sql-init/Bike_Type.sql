@@ -2,7 +2,7 @@
 -- Crezione database
 --
 
-CREATE DATABASE bike;
+CREATE DATABASE IF NOT EXISTS bike;
 
 --
 -- Struttura della tabella Bike_Type
