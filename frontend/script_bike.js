@@ -63,6 +63,8 @@ function editBike() {
   dfCoe.value = "";
   if (idBikeV === "" || descBikeV === "" || dfCoeV === "") {
     window.alert("ERROR - ID, Description e Defect Coef Required");
+  } else if (idBikeV < 1 || idBikeV > 4) {
+    window.alert("ERROR - ID Bike Invalid");
   } else {
 
     //Creo l'oggetto da inviare nel body della richiesta

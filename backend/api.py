@@ -1,4 +1,4 @@
-#Importazione libreria fastapi e dipendenda per la creazione del server backend
+#Importazione libreria fastapi e dipendenze per la creazione del server backend
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 import uvicorn

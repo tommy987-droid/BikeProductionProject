@@ -47,6 +47,9 @@ function getChart(parameter) {
     if (idBikeGV === "") {
       window.alert("ERROR - ID Bike Required");
       return false;
+    } else if (idBikeGV < 1 || idBikeGV > 4) {
+      window.alert("ERROR - ID Bike Invalid");
+      return false;
     }
     else {
       createChart["idBike"] = idBikeGV;
@@ -78,8 +81,9 @@ function getChart(parameter) {
       form[0].classList.add("formHide");
       form[1].classList.add("formHide");
 
-      //Se non ho errori nella richiesta, inserisco nell'html la path del grafico creato e lo visualizzo
-      result.innerHTML = '<img src="' + urlBackEnd + "/" + data["path"] + '" alt="chart">';
+      //Se non ho errori nella richiesta, inserisco nell'html la path del grafico creato 
+      //aggiungendo come query parameter la data per evitare il caching dell'immagine e lo visualizzo
+      result.innerHTML = '<img src="' + urlBackEnd + "/" + data["path"] +`?ts=${Date.now()}`+ '" alt="chart">';
 
     })
     .catch(error => {

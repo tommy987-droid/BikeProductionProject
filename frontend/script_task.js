@@ -151,6 +151,10 @@ function editTask() {
   maxTime.value = "";
   if (idTaskV === "" || idBikeV === "" || minTimeV === "" || maxTimeV === "") {
     window.alert("ERROR - ID Task, ID Bike, Min e Max Required");
+  } else if (idTaskV < 1 || idTaskV > 14) {
+    window.alert("ERROR - ID Task Invalid");
+  } else if (idBikeV < 1 || idBikeV > 4) {
+    window.alert("ERROR - ID Bike Invalid");
   } else {
 
     //Creo l'oggetto da inviare nel body della richiesta
@@ -204,6 +208,8 @@ function getIdTask() {
   idTask2.value = "";
   if (idTask2V === "") {
     window.alert("ERROR - ID Task Required");
+  } else if (idTask2V < 1 || idTask2V > 14) {
+    window.alert("ERROR - ID Task Invalid");
   } else {
 
     // Url per la richiesta
@@ -240,6 +246,8 @@ function getIdBike() {
   idBike2.value = "";
   if (idBike2V === "") {
     window.alert("ERROR - ID Bike Required");
+  } else if (idBike2V < 1 || idBike2V > 4) {
+    window.alert("ERROR - ID Bike Invalid");
   } else {
 
     // Url per la richiesta

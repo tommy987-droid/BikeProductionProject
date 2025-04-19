@@ -180,6 +180,8 @@ function getIdBike() {
   idBikeP.value = "";
   if (idBikePV === "") {
     window.alert("ERROR - ID Bike Required");
+  } else if (idBikePV < 1 || idBikePV > 4) {
+    window.alert("ERROR - ID Bike Invalid");
   } else {
 
     // Url per la richiesta
