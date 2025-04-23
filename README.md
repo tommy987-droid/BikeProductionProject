@@ -1,7 +1,7 @@
 
 # BikeProductionProject
 
-Questo progetto è stato creato come Tesi per il Corso di Laurea in Informatica per le Aziende Digitali, l'obiettivo era sviluppare un codice python per simulare un processo produttivo nel settore secondario. Nello specifico il software è studiato per ottimizzare i processi produttivi di un’azienda che costruisce biciclette grazie alla simulazione e analisi della produzione in lotti. Ho deciso di utilizzare per il mio progetto questo tipo di azienda perché rappresenta un settore manifatturiero in cui si integrano processi industriali, logiche artigianali, automazione e controllo della qualità. 
+Questo progetto è stato creato come Tesi per il Corso di Laurea in Informatica per le Aziende Digitali, l'obiettivo era sviluppare un codice python per simulare un processo produttivo nel settore secondario. Nello specifico il software è studiato per ottimizzare i processi produttivi di un’azienda che costruisce biciclette,  grazie alla simulazione e analisi della produzione in lotti. Ho deciso di utilizzare per il mio progetto questo tipo di azienda perché rappresenta un settore manifatturiero in cui si integrano processi industriali, logiche artigianali, automazione e controllo della qualità. 
 
 Per interagire con il codice python, sono state realizzate 2 versioni: 
 
