@@ -1,4 +1,18 @@
 services:  
+ #Container per l'app CLI
+  CLI:
+    image: python
+    stdin_open: true
+    tty: true       
+    container_name: app-cli
+    volumes:
+      - ./:/app/
+    command: >
+      sh -c 'cd app &&
+      pip install -r requirementsCli.txt &&
+      exec sh'
+    depends_on:
+      - mysql
   #Container per il database mysql
   mysql:    
     image: mysql  
@@ -13,16 +27,3 @@ services:
       - ./sql-init/Production.sql:/docker-entrypoint-initdb.d/2.sql
       - ./sql-init/Task_Cost.sql:/docker-entrypoint-initdb.d/3.sql
       - ./sql-init/Time_Task.sql:/docker-entrypoint-initdb.d/4.sql
-
- #Container per l'app CLI
-  backend:
-    image: python
-    container_name: app-cli
-    volumes:
-      - ./:/app/
-    command: >
-      sh -c 'cd app &&
-      pip install -r requirementsCli.txt &&
-      python makeBikeCli.py'
- 
-
