@@ -14,7 +14,7 @@ services:
       - ./sql-init/Task_Cost.sql:/docker-entrypoint-initdb.d/3.sql
       - ./sql-init/Time_Task.sql:/docker-entrypoint-initdb.d/4.sql
 
- #Container per il l'app CLI
+ #Container per l'app CLI
   backend:
     image: python
     container_name: app-cli
