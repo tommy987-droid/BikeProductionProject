@@ -1,13 +1,4 @@
-services:
-  #Container per il frontend
-  frontend:
-    image: nginx
-    container_name: frontend-nginx
-    ports:
-      - 80:80
-    volumes:
-      - ./frontend/:/usr/share/nginx/html
-  
+services:  
   #Container per il database mysql
   mysql:    
     image: mysql  
@@ -18,22 +9,20 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bike    
     volumes:  
-      - ./backend/sql-init/Bike_Type.sql:/docker-entrypoint-initdb.d/1.sql
-      - ./backend/sql-init/Production.sql:/docker-entrypoint-initdb.d/2.sql
-      - ./backend/sql-init/Task_Cost.sql:/docker-entrypoint-initdb.d/3.sql
-      - ./backend/sql-init/Time_Task.sql:/docker-entrypoint-initdb.d/4.sql
+      - ./sql-init/Bike_Type.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./sql-init/Production.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./sql-init/Task_Cost.sql:/docker-entrypoint-initdb.d/3.sql
+      - ./sql-init/Time_Task.sql:/docker-entrypoint-initdb.d/4.sql
 
- #Container per il backend e api
+ #Container per l'app CLI
   backend:
     image: python
-    container_name: backend-fastapi
-    ports:
-      - 8000:8000
+    container_name: app-cli
     volumes:
-      - ./backend/:/app/
+      - ./:/app/
     command: >
       sh -c 'cd app &&
-      pip install -r requirements.txt &&
-      python api.py'
+      pip install -r requirementsCli.txt &&
+      python makeBikeCli.py'
  
 
