@@ -1,4 +1,2 @@
 /.DS_Store
-/backend/.venv
-/backend/__pycache__
-/frontend/.vscode
+/.venv
