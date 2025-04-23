@@ -124,4 +124,5 @@ Basta avere installato Docker e Docker Compose e poi:
 ## Authors
 
 - [@tommy987-droid](https://github.com/tommy987-droid)
+- [Linkedin](http://linkedin.com/in/tommasomuraca)
 
