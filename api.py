@@ -15,9 +15,10 @@ costructBatch =""
 
 # Creazione applicazione FastAPI
 app = FastAPI()
-origins = ["*"]
 
 #Impostazione del CORS per accettare richieste da qualsiasi fonte
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -50,7 +51,7 @@ app.mount("/graph", StaticFiles(directory="graph"), name="graph")
 @app.get("/")
 async def productionBike(nStations: int=1, hoursDay: int=8 , bike1:int=0,bike2:int=0,bike3:int=0,bike4:int=0):
     
-    #Creazione dell'oggetto che contiene l'elenco delle bici da produrre 
+    #Creazione del dizionario che contiene l'elenco delle bici da produrre 
     batchBike = {1:bike1,2:bike2,3:bike3,4:bike4}
     
     #Tramite il costrutto try exept verifico la corretta connessione al db e la produzione delle bici
@@ -218,7 +219,7 @@ async def showProd():
 async def editBike(listBike:EditBikes):
     try:
         database =db.DB()
-        #Trasformazione dei dati ricevuti in oggetto
+        #Trasformazione dei dati ricevuti in dizionario
         data = listBike.model_dump()
         query= "UPDATE Bike_Type SET Descri = %s, Defect_Coefficient= %s WHERE ID_Type = %s"
         dataQ = (data["desc"],data["defCoef"],data["id"])
