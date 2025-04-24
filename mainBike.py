@@ -54,7 +54,7 @@ class Bike:
 #Classe che si occupa della produzione delle bici
 class ConstructionBike:
     def __init__(self, nStations, hoursDay, bikeBatch, dataBike,dataTime):
-        #creazione dell'id di lotto di produzione in maniera casuale
+        #Creazione dell'id di lotto di produzione in maniera casuale
         self._idBatch = ''.join(choices(string.ascii_letters + string.digits, k=8))
         #Numero di postazioni di lavorazione
         self._nStations = nStations
@@ -73,24 +73,26 @@ class ConstructionBike:
     
     """
     Metodo per la produzione effettiva, riceve come argomenti:
-    - Lotto di bici in formato oggetto;
+    - Lotto di bici in formato dizionario;
     - Elenco informazioni di tutti i tipi di bici;
     - Elenco tempi dei singoli task di tutti i tipi di bici."""
     def costruction(self, bikeBatch,dataBike,dataTime):
-        #Ciclo che esegue il codice finche l'oggetto che contiene il lotto di bici non è vuoto e quindi sono state processate tutte le bici
+        #Ciclo che esegue il codice finche il dizionario che contiene il lotto di bici non è vuoto e quindi sono state processate tutte le bici
         while len(bikeBatch) > 0:
-            #Estazione casuale della prima bici da produrre, utile per non produrre i tipi in manierà sempre univoca
+            #Estrazione casuale del tipo di bici da produrre, utile per non produrre i tipi in maniera sempre univoca
             keyC = choice(list(bikeBatch.keys()))
+
+            #Se ci sono più bici da produrre per quel tipo si prosegue il processo
             if bikeBatch[keyC] >0:
                 time = self._timeWork 
-                #Creazione bici
+                #Creazione dell'istanza della bici
                 bike = Bike(keyC, dataBike,dataTime)
                 task = bike.getTimeTask()
                 #Script che si occupa di assegnare il tempo effettivo del singolo task
                 for keyT in task:
                     self._timeWork += randint(task[keyT]["min"],task[keyT]["max"])
                 self.setWorkingDays()
-                #Script che, basandosi sul coefficiente di difetto, crea randomicamente alcuni bici difettate
+                #Script che, basandosi sul coefficiente di difetto, crea randomicamente alcune bici difettate
                 defect = True if randint(1,100) <= self._timeWork / self._nStations/self._workingDays * bike.getDefectCoef() else False
                 #Calcolo del tempo effettivo di lavorazione per singola bici
                 timeBike = self._timeWork-time
@@ -102,7 +104,7 @@ class ConstructionBike:
                 #Verifica della difettosità della bici così da capire se si deve procedere a produrla nuovamente
                 if not defect:
                     bikeBatch[keyC]-=1
-            #Se non ci sono più bici da produrre per quel tipo, si cancella il tipo dall'oggetto del lotto bici
+            #Se non ci sono più bici da produrre per quel tipo, si cancella il tipo dal dizionario del lotto bici
             else:
                 del bikeBatch[keyC]
     
