@@ -9,7 +9,15 @@ Per interagire con il codice python, sono state realizzate 2 versioni:
     - Back End - Python con libreria FastAPI.
 - Interfaccia da Terminale. 
 
+# Indice
 
+* [Esegui Full Stack App con Docker](#esegui-la-full-stack-app-con-docker)
+* [Esegui APP Python da Terminale con Docker](#esegui-app-python-da-terminale-con-docker)
+* [Esegui APP Python da Terminale in Locale](#esegui-app-python-da-terminale-in-locale)
+* [FAQ](#faq)
+* [Authors](#authors)
+
+  
 ## Esegui la Full Stack App con Docker
 
 Clona il progetto
